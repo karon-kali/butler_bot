@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="ButlerMainTree">
+  <BehaviorTree ID="ButlerMainTree">
+    <Fallback name="main_fallback">
+      <!-- Go to base -->
+      <Sequence name="base_sequence">
+        <SimpleTopicSubscriber name="listen_for_base"
+                             topic_name="/butler_bot"
+                             expected_value="go to base"/>
+        <NavigateToPose name="navigate_to_base" 
+                       goal="0.0;0.0;0.0;0.0;0.0;0.0;1.0" 
+                       server_name="navigate_to_pose"/>
+      </Sequence>
+      
+      <!-- Go to kitchen -->
+      <Sequence name="kitchen_sequence">
+        <SimpleTopicSubscriber name="listen_for_kitchen"
+                             topic_name="/butler_bot"
+                             expected_value="go to kitchen"/>
+        <NavigateToPose name="navigate_to_kitchen" 
+                       goal="0.01979517936706543;2.642317295074463;0.0;0.0;0.0;-0.7071789147627844;0.7070346402510492" 
+                       server_name="navigate_to_pose"/>
+      </Sequence>
+      
+      <!-- Go to table:1 -->
+      <Sequence name="table1_sequence">
+        <SimpleTopicSubscriber name="listen_for_table1"
+                             topic_name="/butler_bot"
+                             expected_value="go to table:1"/>
+        <NavigateToPose name="navigate_to_table_1" 
+                       goal="-2.4339914321899414;0.006211757659912109;0.0;0.0;0.0;0.011913725720045398;0.999929029051296" 
+                       server_name="navigate_to_pose"/>
+      </Sequence>
+      
+      <!-- Go to table:2 -->
+      <Sequence name="table2_sequence">
+        <SimpleTopicSubscriber name="listen_for_table2"
+                             topic_name="/butler_bot"
+                             expected_value="go to table:2"/>
+        <NavigateToPose name="navigate_to_table_2" 
+                       goal="-2.3957793712615967;1.5611562728881836;0.0;0.0;0.0;-0.0009666295339465785;0.9999995328135629" 
+                       server_name="navigate_to_pose"/>
+      </Sequence>
+      
+      <!-- Go to table:3 -->
+      <Sequence name="table3_sequence">
+        <SimpleTopicSubscriber name="listen_for_table3"
+                             topic_name="/butler_bot"
+                             expected_value="go to table:3"/>
+        <NavigateToPose name="navigate_to_table_3" 
+                       goal="-2.2936594486236572;3.1148226261138916;0.0;0.0;0.0;-0.0039046319817073643;0.9999923768954878" 
+                       server_name="navigate_to_pose"/>
+      </Sequence>
+      
+      <!-- Default - Always running to keep trying -->
+      <AlwaysSuccess name="AlwaysRunning"/>
+    </Fallback>
+  </BehaviorTree>
+</root>

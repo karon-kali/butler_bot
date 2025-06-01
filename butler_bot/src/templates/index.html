@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Management System</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🍽️ Restaurant Management System</h1>
+        
+        <div class="sections">
+            <!-- Table 1 -->
+            <div class="section table-section">
+                <div class="table-icon">🍽️</div>
+                <h2>Table 1</h2>
+                <button class="btn btn-done" onclick="markDone('Table 1')">✓ Done</button>
+            </div>
+
+            <!-- Table 2 -->
+            <div class="section table-section">
+                <div class="table-icon">🍽️</div>
+                <h2>Table 2</h2>
+                <button class="btn btn-done" onclick="markDone('Table 2')">✓ Done</button>
+            </div>
+
+            <!-- Table 3 -->
+            <div class="section table-section">
+                <div class="table-icon">🍽️</div>
+                <h2>Table 3</h2>
+                <button class="btn btn-done" onclick="markDone('Table 3')">✓ Done</button>
+            </div>
+
+            <!-- Kitchen -->
+            <div class="section kitchen-section">
+                <div class="kitchen-icon">👨‍🍳</div>
+                <h2>Kitchen</h2>
+                
+                <button class="btn btn-base" onclick="goToBase()">🏠 Go to Base</button>
+                
+                <button class="btn btn-kitchen" onclick="goToKitchen()">👨‍🍳 Go to Kitchen</button>
+
+                <button class="btn btn-done" onclick="markKitchenDone()">✓ Kitchen Done</button>
+                
+                <div class="table-input-group">
+                    <label for="tableNumber">Table Number:</label>
+                    <input type="number" id="tableNumber" class="table-number-input" 
+                           placeholder="Enter table number" min="1" max="999">
+                </div>
+                
+                <button class="btn btn-table" onclick="goToTable()">🍽️ Go to Table</button>
+                
+                <button class="btn btn-cancel" onclick="cancelGoal()">❌ Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function markDone(tableName) {
+            fetch('/api/done', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showMessage(`${tableName} - ${data.message}`, data.success ? 'success' : 'error');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('Error processing done request', 'error');
+            });
+        }
+
+        function goToBase() {
+            fetch('/api/go_to_base', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showMessage(data.message, data.success ? 'success' : 'error');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('Error sending go to base command', 'error');
+            });
+        }
+
+        function goToKitchen() {
+            fetch('/api/go_to_kitchen', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showMessage(data.message, data.success ? 'success' : 'error');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('Error sending go to kitchen command', 'error');
+            });
+        }
+
+        function goToTable() {
+            const tableNumber = document.getElementById('tableNumber').value;
+            
+            if (!tableNumber) {
+                showMessage('Please enter a table number', 'error');
+                return;
+            }
+
+            fetch('/api/go_to_table', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ table_number: tableNumber })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showMessage(data.message, data.success ? 'success' : 'error');
+                if (data.success) {
+                    document.getElementById('tableNumber').value = '';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('Error sending go to table command', 'error');
+            });
+        }
+
+        function cancelGoal() {
+            fetch('/api/cancel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showMessage(data.message, data.success ? 'success' : 'error');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('Error sending cancel command', 'error');
+            });
+        }
+
+        function showMessage(text, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(messageDiv);
+                }, 300);
+            }, 3000);
+        }
+
+        function markKitchenDone() {
+            fetch('/api/kitchen_done', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => showMessage(data.message, data.success ? 'success' : 'error'))  // or alert(data.message)
+                .catch(err => showMessage('Error: ' + err, 'error'));
+        }
+
+
+        // Allow Enter key to submit table number
+        document.getElementById('tableNumber').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                goToTable();
+            }
+        });
+    </script>
+</body>
+</html>
