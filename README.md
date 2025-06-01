@@ -16,6 +16,40 @@ Butler Bot is an intelligent service robot that automates food delivery in resta
 - **Multi-Table Delivery**: Optimized routing for multiple table deliveries
 - **Web Interface**: Browser-based control and monitoring interface
 
+### Implementation Details
+This project consists of several key components that work together to create a complete restaurant service robot system:
+
+## 1. Custom Gazebo Simulation Environment
+
+- Built a custom simulation environment in Gazebo to replicate a restaurant floor layout
+
+## 2. ROS2-Supported Flask Web Server
+
+- Developed a Flask-based web server with integrated ROS2 communication
+- Features a complete web UI that simulates the restaurant interface
+- Allows real-time order management and robot status monitoring through the browser
+
+## 3. Integrated Launch System
+
+- Created a comprehensive ROS2 package with a custom launch file
+- Single command launch file (custom_bringup_launch.py) starts all required components
+- Eliminates the need for multiple terminal sessions and complex startup procedures
+- Ensures proper initialization order and dependency management
+
+## 4. Control Node Bridge
+
+- Built a dedicated control node that serves as the communication bridge
+- Interfaces between the Flask web server and Navigation2 (Nav2) stack
+- Implements core control logic for order processing and task management
+- Handles state transitions and coordinates robot movements between locations
+
+## 5. Custom Behavior Tree System
+
+- Developed a custom behavior tree executor node for advanced task planning
+- Created custom behavior tree nodes tailored for restaurant service scenarios
+- Implements complex decision-making logic for handling the 7 different operational scenarios
+- this is still incomplete
+  
 
 ## Supported Scenarios
 
